@@ -2,18 +2,19 @@ using UnityEngine;
 
 public class PopTires : MonoBehaviour
 {
-    [SerializeField]private GameObject FrontLeftTire;
-    [SerializeField]private GameObject FrontRightTire;
-    [SerializeField]private GameObject BackLeftTire;
-    [SerializeField]private GameObject BackRightTire;
-    // Start is called before the first frame update
-    void Start()
+
+    [SerializeField]private Animator animator;
+    private bool _currentState;
+    private void Start()
     {
-        
+        var stackButton = GetComponent<UnityEngine.UI.Button>();
+        stackButton.onClick.AddListener(TogglePopTire);
     }
 
-    public void PopOutTires()
+    private void TogglePopTire()
     {
-        //FrontLeftTire.transform.localPosition = new;
+        Debug.Log("Pop Tire Script Running");
+        _currentState = !_currentState;
+        animator.SetBool("TirePop", _currentState);
     }
 }
