@@ -9,14 +9,11 @@ namespace Manage_Car_Config
     {
         private static ColourChanger _instance;
 
-        public static ColourChanger Instance
-        {
-            get { return _instance ?? (_instance = GameObject.FindObjectOfType<ColourChanger>()); }
-        }
+        public static ColourChanger Instance => _instance ? _instance : (_instance = GameObject.FindObjectOfType<ColourChanger>());
         [SerializeField]private TMP_Dropdown colourDropdown;
 
 
-        private readonly List<IObserver> _observers = new List<IObserver>();
+        private readonly List<IObserver> _observers = new();
         public Colour colourSelected;
         [SerializeField]private Material[] bodyMaterial;
         private Renderer _rend;

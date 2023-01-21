@@ -10,4 +10,6 @@ public interface ISubject
 public struct Message
 {
     public Colour Colour;
+    public InteriorStyle InteriorStyle;
+    public Engine Engine;
 }

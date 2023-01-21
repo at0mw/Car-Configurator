@@ -9,8 +9,8 @@ public class CarConfigurationDisplay : MonoBehaviour
     [SerializeField]private TMP_Dropdown colourDropdown;
     [SerializeField] private TMP_Dropdown engineDropdown;
     [SerializeField] private TMP_Dropdown interiorStyleDropdown;
-    
-    void Start()
+
+    private void Start()
     {
         Debug.Log("setting values");
         colourDropdown.value = (int)carConfiguration.colour;

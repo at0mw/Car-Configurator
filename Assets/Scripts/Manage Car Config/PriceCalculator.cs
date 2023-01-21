@@ -21,13 +21,17 @@ namespace Manage_Car_Config
 
         void Start()
         {
-            Instance.Attach(this);
+            //TODO Attach Interior and Engine Instances
+            ColourChanger.Instance.Attach(this);
+            InteriorChanger.Instance.Attach(this);
+            EngineChanger.Instance.Attach(this);
             _carManager = CarManager.GetInstance();
         }
         
         public void Notify(Message message)
         {
-            var numericalPrice = carBasePrice + FindColourPrice(message.Colour);
+            var numericalPrice = carBasePrice + FindColourPrice(message.Colour) 
+                                              + FindEnginePrice(message.Engine) + FindInteriorStylePrice(message.InteriorStyle);
             priceText.text = "£" + numericalPrice; //TODO + FindEnginePrice etc
         }
 
