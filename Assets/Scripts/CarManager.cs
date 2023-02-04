@@ -1,39 +1,60 @@
 using System;
+using Enums;
 using Manage_Car_Config;
+using TMPro;
+using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.Serialization;
+using UnityEngine.UI;
 
-public class CarManager : MonoBehaviour
+public class CarManager : MonoBehaviour, IObserver
 {
     private static CarManager _instance;
-    // Hold references to all parts and functions of the car
-    // Be able to alter car configurations after json read
-    // Be able to save car configurations to json
     #region Car Part References
-    private GameObject _carBody;
-    private ColourChanger _carBodyColour;
-    private GameObject _carGrills;
-    private EngineChanger _carEngineModel;
-    private GameObject _carInterior;    
-    private InteriorChanger _carInteriorStyle;
+    [SerializeField]private CarConfiguration carConfiguration;
+    [SerializeField]private TMP_Dropdown colourDropdown;
+    [SerializeField] private TMP_Dropdown engineDropdown;
+    [SerializeField] private TMP_Dropdown interiorStyleDropdown;
+    [SerializeField] private Button saveButton;
     
-    private bool _isCarBodyColourNull;
-    private bool _isCarInteriorStyleNull;
-    private bool _isCarEngineModelNull;
+    [SerializeField]private GameObject priceText;
     #endregion Car Part References
 
+    [NonSerialized]public double CarBasePrice;
+
+    [NonSerialized]public double CurrentColourPrice;
+    [NonSerialized]public double CurrentEnginePrice;
+    [NonSerialized]public double CurrentInteriorStylePrice;
+    private PriceCalculator _priceCalculator;
+    
     private void Start()
     {
-        _carBody = GameObject.Find("PP_Body");
-        _carGrills = GameObject.Find("PP_Grills");
-        _carInterior = GameObject.Find("PP_Interior");
-
-        _carBodyColour = _carBody.GetComponent<ColourChanger>();        
-        _carEngineModel = _carGrills.GetComponent<EngineChanger>();        
-        _carInteriorStyle = _carInterior.GetComponent<InteriorChanger>();
-        
-        _isCarEngineModelNull = _carEngineModel == null;
-        _isCarInteriorStyleNull = _carInteriorStyle == null;
-        _isCarBodyColourNull = _carBodyColour == null;
+        Debug.Log("Start Up");
+        saveButton.onClick.AddListener(SaveData);
+        ColourChanger.Instance.Attach(this);
+        InteriorChanger.Instance.Attach(this);
+        EngineChanger.Instance.Attach(this);
+    }
+    
+    public void Notify(Message message)
+    {
+        Debug.Log("Here we are!!!!!!!!");
+        switch (message.MessageType)
+        {
+            case MessageType.Colour:
+                CurrentColourPrice = _priceCalculator.UpdateColour(message.Colour);
+                break;
+            case MessageType.Interior:
+                CurrentEnginePrice = _priceCalculator.UpdateInterior(message.InteriorStyle);
+                break;
+            case MessageType.Engine:
+                CurrentInteriorStylePrice = _priceCalculator.UpdateEngine(message.Engine);
+                break;
+            default:
+                throw new ArgumentOutOfRangeException();
+        }
+            
+        _priceCalculator.UpdatePrice();
     }
 
     public static CarManager GetInstance()
@@ -52,6 +73,8 @@ public class CarManager : MonoBehaviour
 
     private void Awake()
     {
+        Debug.Log("AWAKENING");
+        _priceCalculator = priceText.GetComponent<PriceCalculator>();
         if(_instance != null && _instance != this)
         {
             Destroy(this.gameObject);
@@ -60,29 +83,40 @@ public class CarManager : MonoBehaviour
         {
             _instance = this;
         }
+        
+        Debug.Log("setting values");
+        colourDropdown.value = (int)carConfiguration.colour;
+        engineDropdown.value = (int)carConfiguration.engine;
+        interiorStyleDropdown.value = (int)carConfiguration.interiorStyle;
+        _priceCalculator.InitialisePrice(carConfiguration.carBasePrice);
+        //CarPrice = carConfiguration.carPrice;
+        //CurrentColourPrice = carConfiguration.colourPrice;
+        //CurrentEnginePrice = carConfiguration.enginePrice;
+        //CurrentInteriorStylePrice = carConfiguration.interiorStylePrice;
+        CurrentColourPrice = _priceCalculator.UpdateColour(carConfiguration.colour);
+        CurrentEnginePrice = _priceCalculator.UpdateEngine(carConfiguration.engine);
+        CurrentInteriorStylePrice = _priceCalculator.UpdateInterior(carConfiguration.interiorStyle);
+        CarBasePrice = carConfiguration.carBasePrice;
+        _priceCalculator.UpdatePrice();
+        // Load in car data scriptable object
     }
 
-    public Enum CheckColour()
+    private void SaveData()
     {
-        if (_isCarBodyColourNull)
-            return null;
+        Debug.Log("Saving......");
+        carConfiguration.colour = (Colour)colourDropdown.value;
+        carConfiguration.engine = (Engine)engineDropdown.value;
+        carConfiguration.interiorStyle = (InteriorStyle)interiorStyleDropdown.value;
+        carConfiguration.carBasePrice = CarBasePrice;
         
-        return _carBodyColour.colourSelected;
+        carConfiguration.colourPrice = CurrentColourPrice;
+        carConfiguration.enginePrice = CurrentEnginePrice;
+        carConfiguration.interiorStylePrice = CurrentInteriorStylePrice;
+        carConfiguration.carPrice = _priceCalculator.CurrentPrice;
     }
 
-    public Enum CheckInteriorStyle()
+    public void UpdatePrice()
     {
-        if (_isCarInteriorStyleNull)
-            return null;
-        
-        return _carInteriorStyle.styleSelected;
-    }
-
-    public Enum CheckEngine()
-    {
-        if (_isCarEngineModelNull)
-            return null;
-        
-        return _carEngineModel.EngineSelected;
+        _priceCalculator.UpdatePrice();
     }
 }

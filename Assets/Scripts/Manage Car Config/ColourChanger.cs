@@ -39,6 +39,7 @@ namespace Manage_Car_Config
             _rend.sharedMaterial = bodyMaterial[value];
             var message = new Message
             {
+                MessageType = MessageType.Colour,
                 Colour = (Colour)value
             };
             Notify(message);

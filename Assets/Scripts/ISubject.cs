@@ -9,6 +9,8 @@ public interface ISubject
 
 public struct Message
 {
+    // Dictionary?
+    public MessageType MessageType;
     public Colour Colour;
     public InteriorStyle InteriorStyle;
     public Engine Engine;

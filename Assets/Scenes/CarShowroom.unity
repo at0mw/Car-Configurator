@@ -1557,7 +1557,6 @@ MonoBehaviour:
     engine: 0
   - price: 39000
     engine: 1
-  carBasePrice: 100000
 --- !u!1001 &284801745
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -5972,7 +5971,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   rotateSlider: {fileID: 1822928230}
---- !u!114 &966201602
+--- !u!114 &966201604
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -5981,13 +5980,15 @@ MonoBehaviour:
   m_GameObject: {fileID: 966201597}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 99b77de098969ed48a834e2e1dfd30cd, type: 3}
+  m_Script: {fileID: 11500000, guid: 60608d749cbe7fc47b8d2e14772936f5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  carConfiguration: {fileID: 11400000, guid: 2c90c04f0be63664a8a24ee282b0a834, type: 2}
+  carConfiguration: {fileID: 11400000, guid: e85b3959518662c42864027eca94c8e2, type: 2}
   colourDropdown: {fileID: 1196037982}
   engineDropdown: {fileID: 1357697449}
   interiorStyleDropdown: {fileID: 1734826238}
+  saveButton: {fileID: 1400157046}
+  priceText: {fileID: 279327002}
 --- !u!1 &982937456
 GameObject:
   m_ObjectHideFlags: 0
@@ -8263,11 +8264,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b388122e3a40e074e80254fd87719fc2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  carConfig:
-    colour: 
-    interiorDesign: 
-    engine: 
-    price: 0
+  carConfig: {fileID: 0}
 --- !u!1 &1423548427
 GameObject:
   m_ObjectHideFlags: 0

@@ -10,13 +10,13 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: d9c7cc86f7e9c11498e514a22356ad3d, type: 3}
-  m_Name: New Car Config
+  m_Name: Car Config Save
   m_EditorClassIdentifier: 
   colour: 0
-  colourPrice: 0
+  colourPrice: 28000
   engine: 1
-  enginePrice: 0
+  enginePrice: 1000
   interiorStyle: 0
-  interiorStylePrice: 0
-  carBasePrice: 0
-  carPrice: 140000
+  interiorStylePrice: 39000
+  carBasePrice: 253000
+  carPrice: 321000

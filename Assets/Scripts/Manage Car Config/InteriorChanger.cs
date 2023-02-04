@@ -36,6 +36,7 @@ namespace Manage_Car_Config
             _rend.sharedMaterial = interiorMaterial[value];
             var message = new Message
             {
+                MessageType = MessageType.Interior,
                 InteriorStyle = (InteriorStyle)value
             };
             Notify(message);

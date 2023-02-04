@@ -34,6 +34,7 @@ namespace Manage_Car_Config
             rend.sharedMaterial = engineMaterial[value];
             var message = new Message
             {
+                MessageType = MessageType.Engine,
                 Engine = (Engine)value
             };
             Notify(message);

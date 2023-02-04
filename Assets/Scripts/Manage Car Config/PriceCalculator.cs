@@ -9,34 +9,82 @@ using static Manage_Car_Config.ColourChanger;
 
 namespace Manage_Car_Config
 {
-    public class PriceCalculator : MonoBehaviour, IObserver
+    public class PriceCalculator : MonoBehaviour
     {
-        private CarManager _carManager;
-
         [SerializeField] private TMP_Text priceText;
         [SerializeField] private List<ColourPrice> colourPrices;
         [SerializeField] private List<InteriorStylePrice> interiorStylePrices;
         [SerializeField] private List<EnginePrice> enginePrices;
-        [SerializeField]private double carBasePrice = 100000;
+        //[SerializeField] private double carBasePrice = 100000;
 
-        void Start()
+        private double _currentColourPrice;
+        private double _currentEnginePrice;
+        private double _currentStylePrice;
+
+        private CarManager Manager => CarManager.GetInstance();
+
+        public double CurrentPrice { get; private set; }
+
+        public void InitialisePrice(double currentPrice)
         {
-            //TODO Attach Interior and Engine Instances
-            ColourChanger.Instance.Attach(this);
-            InteriorChanger.Instance.Attach(this);
-            EngineChanger.Instance.Attach(this);
-            _carManager = CarManager.GetInstance();
+            CurrentPrice = currentPrice;
+        }
+
+        // void Start()
+        // {
+        //     //TODO Attach Interior and Engine Instances
+        //     ColourChanger.Instance.Attach(this);
+        //     InteriorChanger.Instance.Attach(this);
+        //     EngineChanger.Instance.Attach(this);
+        // }
+        //
+        // public void Notify(Message message)
+        // {
+        //     switch (message.MessageType)
+        //     {
+        //         case MessageType.Colour:
+        //             UpdateColour(message.Colour);
+        //             break;
+        //         case MessageType.Interior:
+        //             UpdateInterior(message.InteriorStyle);
+        //             break;
+        //         case MessageType.Engine:
+        //             UpdateEngine(message.Engine);
+        //             break;
+        //         default:
+        //             throw new ArgumentOutOfRangeException();
+        //     }
+        //     
+        //     UpdatePrice();
+        // }
+        
+        public double UpdateColour(Colour newColour)
+        {
+            Debug.Log($"New Colour: {newColour}");
+            return FindColourPrice(newColour);
         }
         
-        public void Notify(Message message)
+        public double UpdateEngine(Engine newEngine)
         {
-            var numericalPrice = carBasePrice + FindColourPrice(message.Colour) 
-                                              + FindEnginePrice(message.Engine) + FindInteriorStylePrice(message.InteriorStyle);
-            priceText.text = "£" + numericalPrice; //TODO + FindEnginePrice etc
+            return FindEnginePrice(newEngine);
         }
 
+        public double UpdateInterior(InteriorStyle newStyle)
+        {
+            return FindInteriorStylePrice(newStyle);
+        }
+        
+        public void UpdatePrice()
+        {
+            Debug.Log($"Price {Manager.CarBasePrice} Colour {Manager.CurrentColourPrice} Engine {Manager.CurrentEnginePrice} Style {Manager.CurrentInteriorStylePrice}");
+            CurrentPrice = Manager.CarBasePrice + Manager.CurrentColourPrice 
+                                            + Manager.CurrentEnginePrice + Manager.CurrentInteriorStylePrice;
+            priceText.text = "£" + CurrentPrice;
+        }
+        
         private double FindColourPrice(Colour colour)
         {
+            Debug.Log($"Here we are with colour {colour}");
             foreach (var colourPrice in colourPrices.Where(colourPrice => colourPrice.colour == colour))
             {
                 return colourPrice.price;
@@ -62,7 +110,7 @@ namespace Manage_Car_Config
             return double.MinValue;
         }
     }
-
+    
     [Serializable]
     public struct ColourPrice
     {
